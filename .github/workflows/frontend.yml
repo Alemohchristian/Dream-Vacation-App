@@ -46,7 +46,7 @@ jobs:
         with:  
           username: ${{ secrets.DOCKERHUB_USERNAME }}  
           password: ${{ secrets.DOCKERHUB_TOKEN }} 
-        retry: 5
+        
          
 
       - name: Build frontend image  
