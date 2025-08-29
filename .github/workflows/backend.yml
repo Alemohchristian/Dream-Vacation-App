@@ -15,7 +15,7 @@ permissions:
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: backend
+  IMAGE_NAME: alemohchristian/backend
 
 jobs:  
   build-test-and-push:  
@@ -61,7 +61,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}  
 
       - name: Build backend image  
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ env.VERSION }} ./backend  
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/alemohchristian/backend:${{ env.VERSION }} ./backend  
 
       - name: Push backend image  
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ env.VERSION }}
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/alemohchristian/backend:${{ env.VERSION }}
