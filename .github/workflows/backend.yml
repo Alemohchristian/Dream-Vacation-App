@@ -61,7 +61,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}  
 
       - name: Build backend image  
-        run: docker build -t ${{ env.IMAGE_NAME }}/alemohchristian/backend:${{ env.VERSION }} ./backend  
+        run: docker build -t ${{ env.IMAGE_NAME }}:${{ env.VERSION }} ./backend  
 
       - name: Push backend image  
-        run: docker push ${{ env.IMAGE_NAME }}/alemohchristian/backend:${{ env.VERSION }}
+        run: docker push ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
