@@ -59,7 +59,6 @@ jobs:
         with:  
           username: ${{ secrets.DOCKERHUB_USERNAME }}  
           password: ${{ secrets.DOCKERHUB_TOKEN }}  
-    
 
       - name: Build backend image  
         run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${{ env.VERSION }} ./backend  
