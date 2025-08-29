@@ -15,7 +15,7 @@ permissions:
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: alemohchristian/backend 
+  IMAGE_NAME: alemohchristian/backend
 
 jobs:  
   build-test-and-push:  
@@ -53,18 +53,16 @@ jobs:
         with:  
           commit_message: "chore: bump version to ${{ env.VERSION }}"  
           file_pattern: VERSION  
-          branch: krisdev  
 
-      - name: Log in to Docker Hub (with retry)  
-        run: |  
-          for i in {1..5}; do  
-            docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}" ${{ env.REGISTRY }} && break  
-            echo "Login failed, retrying in 10s..."  
-            sleep 10  
-          done  
+      - name: Log in to Docker Hub  
+        uses: docker/login-action@v3  
+        with:  
+          username: ${{ secrets.DOCKERHUB_USERNAME }}  
+          password: ${{ secrets.DOCKERHUB_TOKEN }}  
+        retry: 5
 
       - name: Build backend image  
-        run: docker build -t ${{ env.IMAGE_NAME }}:${{ env.VERSION }} ./backend  
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${{ env.VERSION }} ./backend  
 
       - name: Push backend image  
-        run: docker push ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${{ env.VERSION }}
