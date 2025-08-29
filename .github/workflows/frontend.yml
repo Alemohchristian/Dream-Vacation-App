@@ -13,14 +13,13 @@ on:
 permissions: 
   contents: write
 
-jobs:  
-  build-and-push:  
-    runs-on: ubuntu-latest  
-
 env:
   REGISTRY: docker.io
   IMAGE_NAME: alemohchristian/frontend
 
+jobs:  
+  build-and-push:  
+    runs-on: ubuntu-latest  
 
     steps:  
       - name: Checkout repository  
