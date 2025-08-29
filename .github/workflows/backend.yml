@@ -41,11 +41,11 @@ jobs:
       - name: Read and bump version  
         id: version  
         run: |  
-          VERSION=$(cat VERSION)  
+          VERSION=$(cat VERSION | tr -d ' \n\r[:space:]')  
           IFS='.' read -r major minor patch <<< "$VERSION"  
           patch=$((patch+1))  
           NEW_VERSION="$major.$minor.$patch"  
-          echo $NEW_VERSION > VERSION  
+          echo -n "$NEW_VERSION" > VERSION  
           echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV  
 
       - name: Commit new version  
