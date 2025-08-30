@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - krisdev
+    paths:
+      - 'frontend/**'   # Only run when files in the frontend folder change
 
 jobs:
   build-frontend:

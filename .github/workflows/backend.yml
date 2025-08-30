@@ -3,7 +3,9 @@ name: Build and Push Backend Docker Image
 on:
   push:
     branches:
-      - main
+      - krisdev
+    paths:
+      - 'backend/**'   # Only run when files in the backend folder change
 
 jobs:
   build-and-push:
