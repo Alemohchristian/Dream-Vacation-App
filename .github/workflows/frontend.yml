@@ -24,9 +24,8 @@ jobs:
 
       - name: Build and push frontend image
         run: |
-          export DOCKER_BUILDKIT=0
           echo "🚀 Building frontend image..."
-          docker build --no-cache --progress=plain -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-frontend:${VERSION} ./frontend
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-frontend:${VERSION} ./frontend
           
           echo "📤 Pushing frontend image..."
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/dream-frontend:${VERSION}

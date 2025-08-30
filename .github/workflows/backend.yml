@@ -24,9 +24,8 @@ jobs:
 
       - name: Build and push backend image
         run: |
-          export DOCKER_BUILDKIT=0
           echo "🚀 Building backend image..."
-          docker build --no-cache --progress=plain -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${VERSION} ./backend
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${VERSION} ./backend
           
           echo "📤 Pushing backend image..."
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${VERSION}
