@@ -1,56 +1,28 @@
-name: Frontend CI/CD  
+name: Build and Push Frontend
 
-on:  
-  push:  
-    branches: ["krisdev"]  
-    paths:  
-      - "frontend/**"  
-  pull_request:  
-    branches: ["krisdev"]  
-    paths:  
-      - "frontend/**"  
+on:
+  push:
+    branches:
+      - krisdev
 
-permissions: 
-  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-env:
-  REGISTRY: docker.io
-  IMAGE_NAME: alemohchristian/frontend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-jobs:  
-  build-and-push:  
-    runs-on: ubuntu-latest  
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    steps:  
-      - name: Checkout repository  
-        uses: actions/checkout@v4  
+      - name: Set commit SHA as version
+        run: echo "VERSION=${GITHUB_SHA::7}" >> $GITHUB_ENV
 
-      - name: Read and bump version  
-        id: version  
-        run: |  
-          VERSION=$(cat VERSION | tr -d ' \n\r[:space:]')  
-          IFS='.' read -r major minor patch <<< "$VERSION"  
-          patch=$((patch+1))  
-          NEW_VERSION="$major.$minor.$patch"  
-          echo -n "$NEW_VERSION" > VERSION  
-          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV  
-
-      - name: Commit new version  
-        uses: stefanzweifel/git-auto-commit-action@v5  
-        with:  
-          commit_message: "chore: bump version to ${{ env.VERSION }}"  
-          file_pattern: VERSION  
-
-      - name: Log in to Docker Hub  
-        uses: docker/login-action@v3  
-        with:  
-          username: ${{ secrets.DOCKERHUB_USERNAME }}  
-          password: ${{ secrets.DOCKERHUB_TOKEN }} 
-        
-         
-
-      - name: Build frontend image  
-        run: docker build -t ${{ env.IMAGE_NAME }}:${{ env.VERSION }} ./frontend  
-
-      - name: Push frontend image  
-        run: docker push ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+      - name: Build and push frontend image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-frontend:${VERSION} ./frontend
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/dream-frontend:${VERSION}
