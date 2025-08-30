@@ -27,10 +27,10 @@ jobs:
       - name: Build and push backend image
         run: |
           echo "🚀 Building backend image..."
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-frontend:${VERSION} ./backend
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${VERSION} ./backend
           
           echo "📤 Pushing backend image..."
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/dream-frontend:${VERSION}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${VERSION}
 
       - name: Finish backend job
         run: echo "✅ backend build and push completed"
