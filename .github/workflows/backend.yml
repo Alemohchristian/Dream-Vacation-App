@@ -19,14 +19,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set version
+      - name: Disable BuildKit
+        run: echo "DOCKER_BUILDKIT=0" >> $GITHUB_ENV
+
+      - name: Set commit SHA as version
         run: echo "VERSION=${GITHUB_SHA::7}" >> $GITHUB_ENV
 
-      - name: Disable BuildKit
-        run: export DOCKER_BUILDKIT=0
-
-      - name: Build and push backend image
+      - name: Build backend image
         run: |
           echo "🚀 Building backend image..."
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${VERSION} ./backend
+
+      - name: Push backend image
+        run: |
+          echo "📤 Pushing backend image..."
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${VERSION}
