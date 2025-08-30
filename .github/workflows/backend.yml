@@ -1,0 +1,36 @@
+name: Build and Push backend
+
+on:
+  push:
+    branches:
+      - krisdev
+    paths:
+      - 'backend/**'   # Only run when files in the backend folder change
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set commit SHA as version
+        run: echo "VERSION=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Build and push backend image
+        run: |
+          echo "🚀 Building backend image..."
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${VERSION} ./backend
+          
+          echo "📤 Pushing backend image..."
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${VERSION}
+
+      - name: Finish backend job
+        run: echo "✅ backend build and push completed"

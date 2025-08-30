@@ -1,0 +1,36 @@
+name: Build and Push Frontend
+
+on:
+  push:
+    branches:
+      - krisdev
+    paths:
+      - 'frontend/**'   # Only run when files in the frontend folder change
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set commit SHA as version
+        run: echo "VERSION=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Build and push frontend image
+        run: |
+          echo "🚀 Building frontend image..."
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-frontend:${VERSION} ./frontend
+          
+          echo "📤 Pushing frontend image..."
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/dream-frontend:${VERSION}
+
+      - name: Finish frontend job
+        run: echo "✅ Frontend build and push completed"
