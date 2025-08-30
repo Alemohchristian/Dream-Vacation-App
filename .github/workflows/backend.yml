@@ -6,7 +6,7 @@ on:
       - krisdev
 
 jobs:
-  build:
+  build-backend:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,5 +24,12 @@ jobs:
 
       - name: Build and push backend image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${VERSION} ./backend
+          export DOCKER_BUILDKIT=0
+          echo "🚀 Building backend image..."
+          docker build --no-cache --progress=plain -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${VERSION} ./backend
+          
+          echo "📤 Pushing backend image..."
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${VERSION}
+
+      - name: Finish backend job
+        run: echo "✅ Backend build and push completed"

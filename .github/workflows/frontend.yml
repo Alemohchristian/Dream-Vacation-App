@@ -6,7 +6,7 @@ on:
       - krisdev
 
 jobs:
-  build:
+  build-frontend:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,10 +24,12 @@ jobs:
 
       - name: Build and push frontend image
         run: |
-          set -e
           export DOCKER_BUILDKIT=0
-          docker build --no-cache --progress=plain -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-frontend:${VERSION} ./frontend || echo "⚠️ Build failed but continuing"
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/dream-frontend:${VERSION} || echo "⚠️ Push failed but continuing"
+          echo "🚀 Building frontend image..."
+          docker build --no-cache --progress=plain -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-frontend:${VERSION} ./frontend
+          
+          echo "📤 Pushing frontend image..."
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/dream-frontend:${VERSION}
 
-      - name: Mark job successful
-        run: echo "✅ Build job completed successfully"
+      - name: Finish frontend job
+        run: echo "✅ Frontend build and push completed"
