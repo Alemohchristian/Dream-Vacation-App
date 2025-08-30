@@ -6,7 +6,7 @@ on:
       - krisdev
 
 jobs:
-  build-backend:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,18 +19,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set commit SHA as version
+      - name: Set version
         run: echo "VERSION=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Disable BuildKit
+        run: export DOCKER_BUILDKIT=0
 
       - name: Build and push backend image
         run: |
           echo "🚀 Building backend image..."
-          for i in {1..3}; do
-            docker build --network=host -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${VERSION} ./backend && break || sleep 10
-          done
-
-          echo "📤 Pushing backend image..."
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${VERSION} ./backend
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/dream-backend:${VERSION}
-
-      - name: Finish backend job
-        run: echo "✅ Backend build and push completed"
